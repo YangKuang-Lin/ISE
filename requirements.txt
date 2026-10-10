@@ -1,0 +1,35 @@
+# Core
+torch>=2.1
+numpy>=1.24
+scikit-learn>=1.3
+scipy>=1.10
+tqdm>=4.66
+
+# Data + teacher encoder
+datasets>=2.14
+sentence-transformers>=2.2
+transformers>=4.35
+
+# Static-embedder baseline (potion-base-8M)
+model2vec>=0.3
+
+# Figures
+matplotlib>=3.7
+
+# Tested with: the exact versions that produced the reported results. The
+# bounds above are install constraints, not the tested configuration. torch is
+# left unpinned because the tested build is a CUDA wheel that does not resolve
+# from PyPI without a matching extra index. Every run records the resolved
+# versions of these packages into its stage log (see log_environment).
+#
+#   Python                 3.11.9
+#   torch                  2.12.1+cu132
+#   numpy                  2.0.2
+#   scikit-learn           1.6.0
+#   scipy                  1.15.2
+#   tqdm                   4.67.1
+#   datasets               4.3.0
+#   sentence-transformers  5.6.0
+#   transformers           5.3.0
+#   model2vec              0.8.2
+#   matplotlib             3.8.4
