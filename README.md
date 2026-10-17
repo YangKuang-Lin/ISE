@@ -1,8 +1,10 @@
 # Embedding-Shift Distillation: Incremental Sentence Embeddings with Periodic Re-grounding
 
-Code to reproduce every experiment, table, figure, and number in the paper.
+## Abstract
 
-## Layout
+Transformer sentence encoders recompute the *entire* prefix whenever a token is appended, which is wasteful in streaming settings that need an embedding after every token. A recurrent encoder removes that cost, but abandons the teacher's embedding space, which a populated nearest-neighbor index cannot afford to lose. We propose *embedding-shift distillation*: a compact gated cell learns the change each token induces in the frozen teacher's output, and an amortized hybrid encoder applies that update at constant cost between periodic re-encodings. Re-encoding once every eight tokens, it retains 93.7—97.8% of the teacher's retrieval quality across five teachers while spending calls on 9% of query tokens, and 98.3% when distilled on held-out in-domain text. Under every teacher it beats holding the last re-encoding at the same cadence. That budget, shared by any policy, sets serving capacity: 8× more concurrent streams per GPU. Between calls, the learned update holds a worst-step fidelity floor no hold cadence reaches, surfacing as earlier stable decisions. The advantage is regime-dependent: a seeded re-encoding student slightly exceeds the cell on short queries, and on long queries the final embedding is set by the last re-encoding alone, so the cell's regime is where constant per-token cost binds. These results indicate that a preserved embedding space can be streamed at constant cost between calls, once the budget is sized per teacher from its copy-forward residual.
+
+## Project Layout
 
 ```
 code/
@@ -82,22 +84,8 @@ python run_all.py wow    # a single stage
 python run_all.py cells_ssm_mamba2   # e.g. one of the linear-time update cells
 ```
 
-Results are written to `src/experiments/results/*.json`, checkpoints to
-`src/experiments/results/ckpt/`, logs to `src/experiments/results/logs/`, and
-figures to `../paper/assets/` relative to `src/` (created on first run; pass
-`--outdir` to `make_figures.py` to put them elsewhere). Every trained
-configuration runs for seeds 41-43; downstream evaluations are run once per
-seed checkpoint and averaged. Each stage log opens with the Python, PyTorch,
-CUDA, GPU and dependency versions that stage ran under, so a re-run can be
-compared against the configuration recorded in `requirements.txt`.
+Results are written to `src/experiments/results/*.json`, checkpoints to `src/experiments/results/ckpt/`, logs to `src/experiments/results/logs/`, and figures to `../paper/assets/` relative to `src/` (created on first run; pass `--outdir` to `make_figures.py` to put them elsewhere). Every trained configuration runs for seeds 41-43; downstream evaluations are run once per seed checkpoint and averaged. Each stage log opens with the Python, PyTorch, CUDA, GPU and dependency versions that stage ran under, so a re-run can be compared against the configuration recorded in `requirements.txt`.
 
-All corpora and model weights are fetched automatically on first use
-(Hugging Face `datasets` / `sentence-transformers`, and a direct download for
-Wizard of Wikipedia), so no manual data preparation is needed.
+All corpora and model weights are fetched automatically on first use (Hugging Face `datasets` / `sentence-transformers`, and a direct download for Wizard of Wikipedia), so no manual data preparation is needed.
 
-Target hardware: a single 12 GB GPU and roughly 64 GB of system RAM. All
-results in the paper were produced on an RTX 4070 Ti with an Intel Core
-i7-13700K (16 cores / 24 threads); the CPU streaming latencies depend on
-that CPU and on PyTorch's default thread count, both of which each stage
-log records. `run_all.py` is stage-resumable, so an interrupted run
-continues where it stopped.
+Target hardware: a single 12 GB GPU and roughly 64 GB of system RAM. All results in the paper were produced on an RTX 4070 Ti with an Intel Core i7-13700K (16 cores / 24 threads); the CPU streaming latencies depend on that CPU and on PyTorch's default thread count, both of which each stage log records. `run_all.py` is stage-resumable, so an interrupted run continues where it stopped.
