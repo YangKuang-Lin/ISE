@@ -89,3 +89,21 @@ Results are written to `src/experiments/results/*.json`, checkpoints to `src/exp
 All corpora and model weights are fetched automatically on first use (Hugging Face `datasets` / `sentence-transformers`, and a direct download for Wizard of Wikipedia), so no manual data preparation is needed.
 
 Target hardware: a single 12 GB GPU and roughly 64 GB of system RAM. All results in the paper were produced on an RTX 4070 Ti with an Intel Core i7-13700K (16 cores / 24 threads); the CPU streaming latencies depend on that CPU and on PyTorch's default thread count, both of which each stage log records. `run_all.py` is stage-resumable, so an interrupted run continues where it stopped.
+
+
+## Citation
+
+```bibtex
+@inproceedings{lin-2027-embedding,
+    title = "Embedding-Shift Distillation: Incremental Sentence Embeddings with Periodic Re-grounding",
+    author = "Lin, Yang-Kuang",
+    editor = "Nissim, Malvina and
+      Reichart, Roi and
+      Tonelli, Sara",
+    booktitle = "Proceedings of the 20th Conference of the {E}uropean Chapter of the {A}ssociation for {C}omputational {L}inguistics (Volume 1: Long Papers)",
+    month = mar,
+    year = "2027",
+    address = "Athens, Greece",
+    publisher = "Association for Computational Linguistics"
+}
+```
